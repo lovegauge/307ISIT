@@ -1,0 +1,23 @@
+#!/bin/sh
+
+DBNAME=guitardb
+DBUSER=root
+DBPASS=root
+DBHOST=localhost
+
+# Drop database if exists
+echo "Dropping db ${DBNAME} ..."
+mysql --user=${DBUSER} --password=${DBPASS} mysql -e "DROP DATABASE IF EXISTS ${DBNAME}"
+
+# Create database
+echo "Creating db ${DBNAME} ..."
+mysql --user=${DBUSER} --password=${DBPASS} mysql -e "CREATE DATABASE ${DBNAME}"
+
+# Load the patches
+for patch in *.sql; do
+    echo "-- Inserting Patch: ${patch} --"
+    mysql --user=${DBUSER} --password=${DBPASS} ${DBNAME} < ${patch}
+    echo "----------------------------------------"
+done;
+
+exit 0;

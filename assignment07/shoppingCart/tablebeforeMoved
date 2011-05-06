@@ -1,0 +1,22 @@
+<?php else: ?>
+		<table>
+			<tbody>
+			<?php foreach ( $products as $prod ) : ?>
+				<tr class='productlisting'>
+					<td>Image Here!</td>
+					<td>
+						<h1><?php echo $prod->getName() ?></h1>
+						<div class='productdescription'>
+							<?php echo nl2br($prod->getDescription()); ?>
+						</div>
+						<br/>
+						<strong>Category: <?php echo $prod->getCategoryName(); ?></strong>
+						<br/><br/> <!-- Use CSS to get rid of these breaks -->
+						<strong>Price: $<?php echo $prod->getPrice(); ?></strong>
+						<br/><br/> <!-- Use CSS to get rid of these breaks -->
+						<a href='addproduct.php?id=<?php echo $prod->getId(); ?>'>Buy Now!</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
