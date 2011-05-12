@@ -190,6 +190,10 @@ class Book {
 	*/
 	public function setStatusAvailable() {
 		// FIXME
+		$this->_customer_id = null;
+		$this->_status_date = date('Y-m-d');
+		$this->_status_type = 'Available';
+		return true;
 	}
 	
 	/*
@@ -201,6 +205,11 @@ class Book {
 	*/
 	public function setStatusBorrowed( Customer $customer ) {
 		// FIXME
+		
+		$this->_customer_id = $customer->getId();
+		$this->_status_date = date('Y-m-d');
+		$this->_status_type = 'Borrowed';
+		return true;
 	}
 	
 	/*
