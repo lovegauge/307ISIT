@@ -57,18 +57,34 @@ class Customer {
 
 class BookFactory {
 	
-	protected $_db = null;
-	
-	public function __construct() {
-		$this->_db = getDbConnection();
+	// Retrive a single book from the db and return it
+	public function fetch( $bookId ) {
+		// FIXME: This needs to be implemented
+		
+		$book = new Book();
+		// Fix this so that you populate the book with values $book->setValues( $values );
+		
+		$sql = "select * from book where book_id = $bookId";
+		$db = getDbConnection();
+		
+		if ( $result = $db->query($sql) ) {
+			$row = $result->fetch_assoc();
+			$result->close();
+			
+			$book = new Book( $row );
+			return $book;
+		}
+		
+		throw new Exception("Unable to retrieve bookId $bookId from the db");
 	}
 	
+	// Retrieve an array of books from the db and return them
 	public function fetchAll() {
 		
 		$sql =  "select book_id from book order by name asc";
 		
-		
-		$results = $this->_db->query($sql);
+		$db = getDbConnection();
+		$results = $db->query($sql);
 		
 		$returnBooks = array();
 		while ( $row = $results->fetch_assoc() ) {
@@ -87,6 +103,10 @@ class BookFactory {
 		return $returnBooks;
 	}
 	
+	// Save a single book back to the db
+	public function save( Book $myBook ) {
+		// FIXME need to implement this
+	}
 }
 
 
@@ -122,43 +142,16 @@ class Book {
 	// the date the book is due back
 	protected $_due_date = null;
 	
-	public function __construct( $bookId ) {
-		if ( empty($bookId) or !is_int($bookId) ) {
-			throw new Exception("No Book Id supplied, unable to retrieve the product");
-		}
+	public function __construct( array $row ) {
 		
-		// Setup the db connection
-		$this->_db = getDbConnection();
-		
-		// Load the book information
-		$this->_loadBook( $bookId );
-	}
-	
-	/**
-	* Load the record from the db and fill up the internal variables
-	*/
-	protected function _loadBook( $bookId ) {
-		// Do whatever code necessary to fetch the specific product from the
-		// db and set all the internal variables
-		
-		$bookId = $this->_db->real_escape_string( $bookId );
-		
-		$sql = "select * from book where book_id = $bookId";
-		
-		if ( $result = $this->_db->query($sql) ) {
-			$row = $result->fetch_assoc();
-			
-			$this->_id = $row['book_id'];
-			$this->_name = $row['name'];
-			$this->_abstract = $row['abstract'];
-			$this->_isbn = $row['isbn'];
-			$this->_author = $row['author'];
-			$this->_pictureFile = $row['picture_path'];
-			$this->_status_date = $row['status_date'];
-			$this->_due_date = $row['due_date'];
-			$result->close();
-		}
-		
+		$this->_id = $row['book_id'];
+		$this->_name = $row['name'];
+		$this->_abstract = $row['abstract'];
+		$this->_isbn = $row['isbn'];
+		$this->_author = $row['author'];
+		$this->_pictureFile = $row['picture_path'];
+		$this->_status_date = $row['status_date'];
+		$this->_due_date = $row['due_date'];
 	}
 	
 	public function getId() {
@@ -190,7 +183,7 @@ class Book {
 	}
 	
 	public function getDueDate() {
-	return $this->_due_date;
+		return $this->_due_date;
 	}
 }
 
