@@ -60,10 +60,7 @@ class BookFactory {
 	// Retrive a single book from the db and return it
 	public function fetch( $bookId ) {
 		// FIXME: This needs to be implemented
-		
-		$book = new Book();
-		// Fix this so that you populate the book with values $book->setValues( $values );
-		
+				
 		$sql = "select * from book where book_id = $bookId";
 		$db = getDbConnection();
 		
@@ -81,7 +78,7 @@ class BookFactory {
 	// Retrieve an array of books from the db and return them
 	public function fetchAll() {
 		
-		$sql =  "select book_id from book order by name asc";
+		$sql =  "select * from book order by name asc";
 		
 		$db = getDbConnection();
 		$results = $db->query($sql);
@@ -89,11 +86,8 @@ class BookFactory {
 		$returnBooks = array();
 		while ( $row = $results->fetch_assoc() ) {
 			
-			// Convert the result to be a proper integer
-			$bookId = (int)$row['book_id'];
-			
 			// Construct a new Book object using the id above
-			$myBook = new Book( $bookId );
+			$myBook = new Book( $row );
 			
 			// Add it to the stack of books to return
 			$returnBooks[] = $myBook;
