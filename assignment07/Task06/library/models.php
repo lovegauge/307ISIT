@@ -179,5 +179,35 @@ class Book {
 	public function getDueDate() {
 		return $this->_due_date;
 	}
+	
+	/*
+		// Code to set the status available and save it
+		$bf = new BookFactory();
+		$mybook = BookFactory->fetch(1);
+		$mybook->setStatusAvailable();
+		$bf->save( $myBook );
+	
+	*/
+	public function setStatusAvailable() {
+		// FIXME
+	}
+	
+	/*
+		// Code to set the status as borrowed
+		$bf = new BookFactory();
+		$mybook = BookFactory->fetch(1);
+		$mybook->setStatusBorrowed( $customer );
+		$bf->save( $myBook );
+	*/
+	public function setStatusBorrowed( Customer $customer ) {
+		// FIXME
+	}
+	
+	/*
+		// See above for example, just change the function being called
+	*/
+	public function setStatusOnHold( Customer $customer ) {
+		// FIXME
+	}
 }
 
