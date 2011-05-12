@@ -7,21 +7,21 @@ $pantsNeeded =0 ;
 $bestProfit = 0;
 $machinecost=0;
 
-for ($shirt = 0; $shirt < 40; $shirt ++)
+for ($shirt = 0; $shirt <= 40; $shirt ++)
 {
 	$machinecost = 0;
-		if ($shirt == 1 )
+		if ($shirt >= 1 )
 		{
-			$machinecost = $machinecost + 200;
+			$machinecost = 200;
 			
 		}
-	for ($short = 0; $short < 53; $short ++)
+	for ($short = 0; $short <= 53; $short ++)
 	{
 			if ($short == 1)
 			{
 				$machinecost = $machinecost + 150;
 			}	
-		for ($pant = 0; $pant < 25; $pant ++)
+		for ($pant = 0; $pant <= 25; $pant ++)
 		{
 				if ($pant == 1)
 				{

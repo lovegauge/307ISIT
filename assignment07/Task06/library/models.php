@@ -100,6 +100,22 @@ class BookFactory {
 	// Save a single book back to the db
 	public function save( Book $myBook ) {
 		// FIXME need to implement this
+		//pull the values out of a given book and update to a database		
+		
+		$sql = "insert into book (book_id, name, isbn, abstract, author,
+			status_type_id, status_date, customer_id, due_date, picture_path)
+			values($myBook->getId();, $myBook->getName();, $myBook->getIsbn();
+			, $myBook->getAbstract();, $myBook->getAuthor();, $myBook->getStatusType();
+			, $myBook->getStatusDate();, $myBook->getCustomerId();, $myBook->getDueDate
+			, $myBook->getPictureFile();)";
+		
+			$db = getDbConnection();
+			$result = $db->query($sql);
+	}
+	
+	//return all books for a customer 
+	public function fetchByCustomer(){
+		
 	}
 }
 
@@ -143,8 +159,10 @@ class Book {
 		$this->_abstract = $row['abstract'];
 		$this->_isbn = $row['isbn'];
 		$this->_author = $row['author'];
+		$this->_status_type = $row['status_type_id'];
 		$this->_pictureFile = $row['picture_path'];
 		$this->_status_date = $row['status_date'];
+		$this->_customer_id = $row['customer_id'];
 		$this->_due_date = $row['due_date'];
 	}
 	
@@ -168,12 +186,20 @@ class Book {
 		return $this->_author;
 	}
 	
+	public function getStatusType() {
+		return $this->_status_type;
+	}
+	
 	public function getPictureFile() {
 		return $this->_pictureFile;
 	}
 	
 	public function getStatusDate() {
 		return $this->_status_date;
+	}
+	
+	public function getCustomerId(){
+		return $this->_customer_id;
 	}
 	
 	public function getDueDate() {
@@ -192,6 +218,7 @@ class Book {
 		// FIXME
 		$this->_customer_id = null;
 		$this->_status_date = date('Y-m-d');
+		//set due date as null
 		$this->_status_type = 'Available';
 		return true;
 	}
@@ -208,6 +235,7 @@ class Book {
 		
 		$this->_customer_id = $customer->getId();
 		$this->_status_date = date('Y-m-d');
+		//add borrowed date using php date function + 2 weeks
 		$this->_status_type = 'Borrowed';
 		return true;
 	}
