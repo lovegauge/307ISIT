@@ -104,22 +104,22 @@ class BookFactory {
 		
 		
 		$statusType = 'NULL';
-		if ( ! empty($myBook->getStatusType()) ) {
+		if ( $myBook->getStatusType() !== null ) {
 			$statusType = $myBook->getStatusType();
 		}
 		
 		$statusDate = 'NULL';
-		if ( ! empty($myBook->getStatusDate()) ) {
+		if ( $myBook->getStatusDate() !== null ) {
 			$statusDate = "'".$myBook->getStatusDate()."'";
 		}
 		
 		$customerId = 'NULL';
-		if ( ! empty($myBook->getCustomerId()) ) {
+		if ( $myBook->getCustomerId() !== null ) {
 			$customerId = $myBook->getCustomerId();
 		}
 		
 		$dueDate = 'NULL';
-		if ( ! empty($myBook->getDueDate()) ) {
+		if ( $myBook->getDueDate() !== null ) {
 			$dueDate = "'".$myBook->getDueDate()."'";
 		}
 		
@@ -216,6 +216,10 @@ class Book {
 		return $this->_status_type;
 	}
 	
+	public function setStatusType( $statusType ) {
+		$this->_status_type = $statusType;
+	}
+	
 	public function getPictureFile() {
 		return $this->_pictureFile;
 	}
@@ -224,12 +228,20 @@ class Book {
 		return $this->_status_date;
 	}
 	
+	public function setStatusDate( $statusDate ) {
+		$this->_status_date = $statusDate;
+	}
+	
 	public function getCustomerId(){
 		return $this->_customer_id;
 	}
 	
 	public function getDueDate() {
 		return $this->_due_date;
+	}
+	
+	public function setDueDate( $dueDate ) {
+		$this->_due_date = $dueDate;
 	}
 	
 	/*
@@ -246,6 +258,7 @@ class Book {
 		$this->_status_date = date('Y-m-d');
 		//set due date as null
 		$this->_status_type = 'Available';
+		$this->_due_date = null;
 		return true;
 	}
 	

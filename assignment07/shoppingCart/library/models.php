@@ -262,8 +262,8 @@ class ShoppingCartFactory {
 		// If we have saved some products then add to the cart
 		if ( isset($_SESSION['cart']) ) {
 			$cartItems = $_SESSION['cart'];
-			foreach ( $cartItems as $productId ) {
-				$cart->addProduct( (int)$productId );
+			foreach ( $cartItems as $productId => $productQuantity ) {
+				$cart->addProduct( (int)$productId, $productQuantity );
 			}
 		}
 		
@@ -279,7 +279,11 @@ class ShoppingCartFactory {
 		$cartProducts = $cart->getProducts();
 		$productIds = array();
 		foreach ( $cartProducts as $product ) {
-			$productIds[] = (int)$product->getId();
+		
+			$productId = (int)$product->getId();
+			$productQuantity = $product->getQuantity();
+			
+			$productIds[$productId] = $productQuantity;
 		}
 		
 		$_SESSION['cart'] = $productIds;
@@ -298,14 +302,27 @@ class ShoppingCart {
 	}
 	
 	// Add a product to this shopping cart
-	public function addProduct( $productId ) {
+	public function addProduct( $productId, $quantity=1 ) {
 
 		if ( empty($productId) or !is_int($productId) ) {
 			throw new Exception("Invalid product id to add to shopping cart");
 		}
 		
-		$myProduct = new Product( $productId );
-		$this->_products[$productId] = $myProduct;
+		
+		
+		// If we already have at least one of these in the cart, just inc it
+		if ( array_key_exists( $this->_products[$productId] ) ) {
+		
+			$productQuantity = $this->_products[$productId]->getQuantity() + $quantity;
+			$this->_products[$productId]->setQuantity($productQuantity);
+		}
+		else {
+			$myProduct = new Product( $productId );
+			$myProduct->setQuantity($quantity);
+			$this->_products[$productId] = $myProduct;
+		}
+		
+		
 		return true;
 	}
 	
