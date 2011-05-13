@@ -102,19 +102,45 @@ class BookFactory {
 		// FIXME need to implement this
 		//pull the values out of a given book and update to a database		
 		
-		$sql = "insert into book (book_id, name, isbn, abstract, author,
-			status_type_id, status_date, customer_id, due_date, picture_path)
-			values($myBook->getId();, $myBook->getName();, $myBook->getIsbn();
-			, $myBook->getAbstract();, $myBook->getAuthor();, $myBook->getStatusType();
-			, $myBook->getStatusDate();, $myBook->getCustomerId();, $myBook->getDueDate
-			, $myBook->getPictureFile();)";
 		
-			$db = getDbConnection();
-			$result = $db->query($sql);
+		$statusType = 'NULL';
+		if ( ! empty($myBook->getStatusType()) ) {
+			$statusType = $myBook->getStatusType();
+		}
+		
+		$statusDate = 'NULL';
+		if ( ! empty($myBook->getStatusDate()) ) {
+			$statusDate = "'".$myBook->getStatusDate()."'";
+		}
+		
+		$customerId = 'NULL';
+		if ( ! empty($myBook->getCustomerId()) ) {
+			$customerId = $myBook->getCustomerId();
+		}
+		
+		$dueDate = 'NULL';
+		if ( ! empty($myBook->getDueDate()) ) {
+			$dueDate = "'".$myBook->getDueDate()."'";
+		}
+		
+		$sql = "
+			update book set
+				status_type_id = $statusType,
+				status_date = $statusDate,
+				customer_id = $customerId,
+			where book_id = ".$myBook->getId()."
+		";
+		
+		$db = getDbConnection();
+		$result = $db->query($sql);
+		if ( ! $result ) {
+			throw new Exception("Unable to save book to the database with sql string: $sql");
+		}
+		return true;
 	}
 	
 	//return all books for a customer 
-	public function fetchByCustomer(){
+	public function fetchByCustomer( Customer $customer ){
 		
 	}
 }
