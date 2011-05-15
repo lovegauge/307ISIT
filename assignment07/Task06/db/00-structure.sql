@@ -38,7 +38,7 @@ create table book (
 	customer_id        integer references customer(customer_id),
 	
 --The date the book is to be returned
-	due_date date, 
+	due_date timestamp,
 -- picture path of book
 	picture_path text not null
 );

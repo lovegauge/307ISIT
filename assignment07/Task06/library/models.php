@@ -44,13 +44,9 @@ class CustomerFactory {
 	// Store a single customer in session
 	public function storeCustomer( Customer $customer ) {
 		// FIXME need to implement this
-		$_SESSION['currentCustomer'] = $customer;
-		
-		
-		
-		/*$_SESSION['customer_id'] = $customer->getId();
+		$_SESSION['customer_id'] = $customer->getId();
 		$_SESSION['customer_name'] = $customer->getName();
-		$_SESSION['customer_password'] = $customer->getpassword();*/
+		$_SESSION['customer_password'] = $customer->getpassword();
 		return true;
 	}
 
@@ -201,6 +197,7 @@ class BookFactory {
 			update book set
 				status_type_id = '$statusType',
 				status_date = $statusDate,
+				due_date = $dueDate,
 				customer_id = $customerId
 			where book_id = ".$myBook->getId()."
 		"; 
@@ -215,9 +212,30 @@ class BookFactory {
 	}
 	
 	//return all books for a customer 
-	public function fetchByCustomer( Customer $customer ){
+	public function fetchByCustomer($customerId ){
+		$sql =  "select * from book
+			where customer_id = ".$customerId."";
 		
+		$db = getDbConnection();
+		$results = $db->query($sql);
+		if ( !$results ) {
+			throw new Exception("Unable to save book to the database with sql string: $sql");
+		}
+		
+		$returnBooks = array();
+		while ( $row = $results->fetch_assoc() ) {
+			
+			// Construct a new Book object using the id above
+			$myBook = new Book( $row );
+			
+			// Add it to the stack of books to return
+			$returnBooks[] = $myBook;
+		}
+		
+		// Return the array of books objects
+		return $returnBooks;
 	}
+	
 }
 
 
@@ -331,12 +349,12 @@ class Book {
 	}
 	
 
-	public function setStatusBorrowed( Customer $customer ) {
+	public function setStatusBorrowed( $customerId ) {
 		// FIXME
 		
-		$this->_customer_id = $customer->getId();
+		$this->_customer_id = $customerId;
 		$this->_status_date = date('Y-m-d');
-		//add borrowed date using php date function + 2 weeks
+		$this->_due_date = date("Y-m-d", strtotime("+1 months"));
 		$this->_status_type = 'Borrowed';
 		return true;
 	}
@@ -344,8 +362,12 @@ class Book {
 	/*
 		// See above for example, just change the function being called
 	*/
-	public function setStatusOnHold( Customer $customer ) {
-		// FIXME
+	public function setStatusOnHold( $customerId) {
+		$this->_customer_id = $customerId;
+		$this->_status_date = date('Y-m-d');
+		//add borrowed date using php date function + 2 weeks
+		$this->_status_type = 'On Hold';
+		return true;
 	}
 }
 

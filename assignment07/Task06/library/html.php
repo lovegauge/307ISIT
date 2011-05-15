@@ -78,10 +78,64 @@ function displayTable ($books){
 						echo"<br/><br/>";
 						echo"<strong>Status: ";
 						echo $book->getStatusType(); 
+						
+						if ($book->getStatusType() == 'Borrowed' ){
+							echo"</strong>";
+							echo"<br/><br/>";
+								echo"<a href='holdBook.php?id=".$book->getId();
+								echo"'>Place on Hold!</a>";
+							}
+						else if ($book->getStatusType() == 'On Hold' ){
+							echo"</strong>";
+							echo"<br/><br/>";
+							echo"Sorry book is already on hold</a>";
+						}
+						else{
+							echo"</strong>";
+							echo"<br/><br/>";
+							echo"<a href='borrowBook.php?id=".$book->getId();
+							echo"'>Borrow!</a>";
+						}
+						
+						echo"</td>";
+					echo"</tr>";
+			endforeach; 
+			echo"</tbody>";
+		echo"</table>";
+}
+
+function displayPersonalTable ($books){
+	
+	echo"<table border = 1>";
+			echo"<tbody>";
+			foreach ( $books as $book ) :
+				echo"<tr class='listing'>";
+				echo "<td><img src='./images/";
+				echo $book->getPictureFile(); 
+				echo "'></td>";
+				echo"<td>";
+						echo"<h1>".$book->getName(); 
+						echo"</h1>";
+						echo"<div class='productdescription'>";
+								echo nl2br($book->getabstract()); 
+						echo"</div>";
+						echo"<br/>";
+						echo"<strong>ISBN: "; 
+						echo $book->getisbn(); 
 						echo"</strong>";
 						echo"<br/><br/>";
-							echo"<a href='addProduct.php?id=".$book->getId();
-							echo"'>Borrow!</a>";
+						echo"<strong>Author: ";
+						echo $book->getauthor(); 
+						echo"</strong>";
+						echo"<br/><br/>";
+						echo"<strong>Status: Currently ";
+						echo $book->getStatusType(); 
+						echo"</strong>";
+						echo"<br/><br/>";
+						echo"<strong>Due Date: ";
+						echo $book->getDueDate();
+						
+						
 						echo"</td>";
 					echo"</tr>";
 			endforeach; 
