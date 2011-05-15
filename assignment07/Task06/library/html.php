@@ -76,6 +76,10 @@ function displayTable ($books){
 						echo $book->getauthor(); 
 						echo"</strong>";
 						echo"<br/><br/>";
+						echo"<strong>Status: ";
+						echo $book->getStatusType(); 
+						echo"</strong>";
+						echo"<br/><br/>";
 							echo"<a href='addProduct.php?id=".$book->getId();
 							echo"'>Borrow!</a>";
 						echo"</td>";

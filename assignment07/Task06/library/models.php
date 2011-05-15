@@ -44,9 +44,13 @@ class CustomerFactory {
 	// Store a single customer in session
 	public function storeCustomer( Customer $customer ) {
 		// FIXME need to implement this
-		$_SESSION['customer_id'] = $customer->getId();
+		$_SESSION['currentCustomer'] = $customer;
+		
+		
+		
+		/*$_SESSION['customer_id'] = $customer->getId();
 		$_SESSION['customer_name'] = $customer->getName();
-		$_SESSION['customer_password'] = $customer->getpassword();
+		$_SESSION['customer_password'] = $customer->getpassword();*/
 		return true;
 	}
 
@@ -130,7 +134,7 @@ class BookFactory {
 	
 	// Retrive a single book from the db and return it
 	public function fetch( $bookId ) {
-		// FIXME: This needs to be implemented
+		
 				
 		$sql = "select * from book where book_id = $bookId";
 		$db = getDbConnection();
@@ -170,7 +174,6 @@ class BookFactory {
 	
 	// Save a single book back to the db
 	public function save( Book $myBook ) {
-		// FIXME need to implement this
 		//pull the values out of a given book and update to a database		
 		
 		
@@ -196,15 +199,16 @@ class BookFactory {
 		
 		$sql = "
 			update book set
-				status_type_id = $statusType,
+				status_type_id = '$statusType',
 				status_date = $statusDate,
-				customer_id = $customerId,
+				customer_id = $customerId
 			where book_id = ".$myBook->getId()."
-		";
+		"; 
 		
 		$db = getDbConnection();
-		$result = $db->query($sql);
-		if ( ! $result ) {
+		
+		$results = $db->query($sql);
+		if ( !$results ) {
 			throw new Exception("Unable to save book to the database with sql string: $sql");
 		}
 		return true;
@@ -315,14 +319,7 @@ class Book {
 		$this->_due_date = $dueDate;
 	}
 	
-	/*
-		// Code to set the status available and save it
-		$bf = new BookFactory();
-		$mybook = BookFactory->fetch(1);
-		$mybook->setStatusAvailable();
-		$bf->save( $myBook );
-	
-	*/
+
 	public function setStatusAvailable() {
 		// FIXME
 		$this->_customer_id = null;
@@ -333,13 +330,7 @@ class Book {
 		return true;
 	}
 	
-	/*
-		// Code to set the status as borrowed
-		$bf = new BookFactory();
-		$mybook = BookFactory->fetch(1);
-		$mybook->setStatusBorrowed( $customer );
-		$bf->save( $myBook );
-	*/
+
 	public function setStatusBorrowed( Customer $customer ) {
 		// FIXME
 		
