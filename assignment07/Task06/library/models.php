@@ -1,6 +1,59 @@
 <?php
 require_once 'db.php';
 
+class CustomerFactory {
+	
+	// Retrive a single customer from the db and return it
+	public function fetch( $CustomerId ) {
+				
+		$sql = "select * from customer where customer_id = $CustomerId";
+		$db = getDbConnection();
+		
+		if ( $result = $db->query($sql) ) {
+			$row = $result->fetch_assoc();
+			$result->close();
+			$customer = new customer( $row );
+			return $customer;
+		}
+		
+		throw new Exception("Unable to retrieve customerId $customerId from the db");
+	}
+	
+	// Retrieve an array of customers from the db and return them
+	public function fetchAll() {
+		
+		$sql =  "select * from customer order by name asc";
+		
+		$db = getDbConnection();
+		$results = $db->query($sql);
+		
+		$returnCustomers = array();
+		while ( $row = $results->fetch_assoc() ) {
+			
+			// Construct a new customer object using the id above
+			$myCustomer = new Customer( $row );
+			
+			// Add it to the stack of customers to return
+			$returnCustomers[] = $myCustomer;
+		}
+		
+		// Return the array of customers objects
+		return $returnCustomers;
+	}
+	
+	// Store a single customer in session
+	public function storeCustomer( Customer $customer ) {
+		// FIXME need to implement this
+		$_SESSION['customer_id'] = $customer->getId();
+		$_SESSION['customer_name'] = $customer->getName();
+		$_SESSION['customer_password'] = $customer->getpassword();
+		return true;
+	}
+
+}
+
+
+
 // A customer represents a logged in shopper
 class Customer {
 	protected $_db = null;
@@ -10,7 +63,24 @@ class Customer {
 	protected $_name = null;
 	
 	protected $_password = null;
+	public function __construct( array $row ) {
+		
+		$this->_id = $row['customer_id'];
+		$this->_name = $row['name'];
+		$this->_password = $row['password'];
+	}
+	public function login($customerPassword){
+		if ($customerPassword == $this->_password){
+		return true;
+		
+		}
+		else
+		return false;
 	
+	}
+	
+	
+	/* Prior to introducind customerFactory
 	public function __construct($customerId){
 		if ( empty($customerId) or !is_int($customerId) ) {
 			throw new Exception("No customer in system");
@@ -39,6 +109,7 @@ class Customer {
 			$result->close();
 		}
 	}
+	*/
 	
 	
 	public function getId(){
